@@ -14,7 +14,7 @@ async function getCommits(path, last, before) {
       "--",
       pather.basename(path),
     ],
-    { cwd: pather.dirname(path) },
+    { cwd: pather.dirname(path) }
   );
   const json = `[${stdout.slice(0, -1)}]`;
 
@@ -28,7 +28,7 @@ async function getCommits(path, last, before) {
       "--",
       pather.basename(path),
     ],
-    { cwd: pather.dirname(path) },
+    { cwd: pather.dirname(path) }
   );
 
   const messages = messagesOutput.stdout.replace('"', '\\"').split(/\r?\n/);
@@ -46,7 +46,7 @@ async function getContent(commit, path) {
   const { stdout } = await execa(
     "git",
     ["show", `${commit.hash}:./${pather.basename(path)}`],
-    { cwd: pather.dirname(path) },
+    { cwd: pather.dirname(path) }
   );
   return stdout;
 }
@@ -56,7 +56,7 @@ module.exports = async function (path, last, before) {
   await Promise.all(
     commits.map(async (commit) => {
       commit.content = await getContent(commit, path);
-    }),
+    })
   );
   return commits;
 };

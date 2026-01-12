@@ -20,10 +20,7 @@
     "githistory": "./cli.js",
     "git-history": "./cli.js"
   },
-  "files": [
-    "site",
-    "*.js"
-  ],
+  "files": ["site", "*.js"],
   "dependencies": {
     "execa": "^1.0.0",
     "get-port": "^4.1.0",

@@ -6,10 +6,10 @@ const getCommits = require("./git");
 
 const [, , path, last, before] = process.argv;
 
-getCommits(path, last, before).then(cs =>
+getCommits(path, last, before).then((cs) =>
   console.log(
     cs
-      .map(c => {
+      .map((c) => {
         return `${c.hash} ${c.date.toDateString()} ${c.message}`;
       })
       .join("\n")

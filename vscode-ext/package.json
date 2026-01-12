@@ -6,28 +6,17 @@
   "repository": "pomber/git-history",
   "publisher": "pomber",
   "license": "MIT",
-  "keywords": [
-    "git",
-    "history",
-    "log",
-    "file",
-    "commit",
-    "show"
-  ],
+  "keywords": ["git", "history", "log", "file", "commit", "show"],
   "engines": {
     "vscode": "^1.30.2"
   },
-  "categories": [
-    "Other"
-  ],
+  "categories": ["Other"],
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#011627",
     "theme": "dark"
   },
-  "activationEvents": [
-    "onCommand:extension.git-file-history"
-  ],
+  "activationEvents": ["onCommand:extension.git-file-history"],
   "main": "./extension.js",
   "contributes": {
     "commands": [

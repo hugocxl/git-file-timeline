@@ -15,7 +15,7 @@ function activate(context) {
   // The commandId parameter must match the command field in package.json
   let disposable = vscode.commands.registerCommand(
     "extension.git-file-history",
-    function() {
+    function () {
       // The code you place here will be executed every time your command is executed
       try {
         const currentPath = getCurrentPath();
@@ -32,8 +32,8 @@ function activate(context) {
             enableScripts: true,
             retainContextWhenHidden: true,
             localResourceRoots: [
-              vscode.Uri.file(path.join(context.extensionPath, "site"))
-            ]
+              vscode.Uri.file(path.join(context.extensionPath, "site")),
+            ],
           }
         );
         const indexPath = path.join(
@@ -58,20 +58,17 @@ function activate(context) {
               currentPath
             )}/*-->*/</script>`
           )
-          .replace(
-            "<head>",
-            `<head>${cspMeta}<base href="${siteUri}/">`
-          );
+          .replace("<head>", `<head>${cspMeta}<base href="${siteUri}/">`);
 
         panel.webview.html = newIndex;
 
         panel.webview.onDidReceiveMessage(
-          message => {
+          (message) => {
             switch (message.command) {
               case "commits":
                 const { path, last = 15, before = null } = message.params;
                 getCommits(path, last, before)
-                  .then(commits => {
+                  .then((commits) => {
                     panel.webview.postMessage(commits);
                   })
                   .catch(console.error);
@@ -105,5 +102,5 @@ function deactivate() {}
 
 module.exports = {
   activate,
-  deactivate
+  deactivate,
 };
