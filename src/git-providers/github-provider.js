@@ -10,14 +10,8 @@ function isLoggedIn() {
 }
 
 function getUrlParams() {
-  const [
-    ,
-    owner,
-    reponame,
-    action,
-    sha,
-    ...paths
-  ] = window.location.pathname.split("/");
+  const [, owner, reponame, action, sha, ...paths] =
+    window.location.pathname.split("/");
 
   if (action !== "commits" && action !== "blob") {
     return [];
@@ -39,19 +33,19 @@ function showLanding() {
 function logIn() {
   // return new Promise((resolve, reject) => {
   var authenticator = new netlify({
-    site_id: "ccf3a0e2-ac06-4f37-9b17-df1dd41fb1a6"
+    site_id: "ccf3a0e2-ac06-4f37-9b17-df1dd41fb1a6",
   });
-  authenticator.authenticate({ provider: "github", scope: "repo" }, function(
-    err,
-    data
-  ) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    window.localStorage.setItem(TOKEN_KEY, data.token);
-    window.location.reload(false);
-  });
+  authenticator.authenticate(
+    { provider: "github", scope: "repo" },
+    function (err, data) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      window.localStorage.setItem(TOKEN_KEY, data.token);
+      window.location.reload(false);
+    },
+  );
   // });
 }
 function LogInButton() {
@@ -97,5 +91,5 @@ export default {
   getVersions,
   logIn,
   isLoggedIn,
-  LogInButton
+  LogInButton,
 };

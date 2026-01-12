@@ -12,7 +12,7 @@ const argv = require("yargs")
 
 const sitePath = pather.join(__dirname, "site/");
 
-router.get("/api/commits", async ctx => {
+router.get("/api/commits", async (ctx) => {
   const query = ctx.query;
   const { path, last = 10, before = null } = query;
 
@@ -24,10 +24,10 @@ router.get("/api/commits", async ctx => {
 const app = new Koa();
 app.use(router.routes());
 app.use(serve(sitePath));
-app.on("error", err => {
+app.on("error", (err) => {
   console.error("Server error", err);
   console.error(
-    "Let us know of the error at https://github.com/pomber/git-history/issues"
+    "Let us know of the error at https://github.com/pomber/git-history/issues",
   );
 });
 

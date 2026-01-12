@@ -14,7 +14,7 @@ function CommitInfo({ commit, move, onClick }) {
         left: "50%",
         transform: `translateX(-50%) translateX(${250 * move}px)`,
         opacity: 1 / (1 + Math.min(0.8, Math.abs(move))),
-        zIndex: !isActive && 2
+        zIndex: !isActive && 2,
       }}
     >
       <div
@@ -23,7 +23,7 @@ function CommitInfo({ commit, move, onClick }) {
           alignItems: "center",
           justifyContent: "center",
           cursor: "pointer",
-          padding: "5px 0 15px"
+          padding: "5px 0 15px",
         }}
         onClick={onClick}
       >
@@ -70,7 +70,7 @@ function CommitInfo({ commit, move, onClick }) {
 }
 
 function CommitList({ commits, currentIndex, selectCommit }) {
-  const mouseWheelEvent = e => {
+  const mouseWheelEvent = (e) => {
     e.preventDefault();
     selectCommit(currentIndex - (e.deltaX + e.deltaY) / 100);
   };
@@ -84,7 +84,7 @@ function CommitList({ commits, currentIndex, selectCommit }) {
         position: "fixed",
         top: 0,
         background: "rgb(1, 22, 39)",
-        zIndex: 1
+        zIndex: 1,
       }}
     >
       {commits.map((commit, commitIndex) => (
@@ -105,8 +105,8 @@ export default function History({ versions, loadMore }) {
 
 function Slides({ versions, loadMore }) {
   const [current, target, setTarget] = useSliderSpring(0);
-  const commits = versions.map(v => v.commit);
-  const setClampedTarget = newTarget => {
+  const commits = versions.map((v) => v.commit);
+  const setClampedTarget = (newTarget) => {
     setTarget(Math.min(commits.length - 0.75, Math.max(-0.25, newTarget)));
     if (newTarget >= commits.length - 5) {
       loadMore();
@@ -116,7 +116,7 @@ function Slides({ versions, loadMore }) {
   const nextSlide = () => setClampedTarget(Math.round(target - 0.51));
   const prevSlide = () => setClampedTarget(Math.round(target + 0.51));
   useEffect(() => {
-    document.body.onkeydown = function(e) {
+    document.body.onkeydown = function (e) {
       if (e.keyCode === 39) {
         nextSlide();
       } else if (e.keyCode === 37) {
@@ -132,7 +132,7 @@ function Slides({ versions, loadMore }) {
       <CommitList
         commits={commits}
         currentIndex={current}
-        selectCommit={index => setClampedTarget(index)}
+        selectCommit={(index) => setClampedTarget(index)}
       />
       <Swipeable
         onSwipedLeft={nextSlide}

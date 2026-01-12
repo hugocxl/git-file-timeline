@@ -3,8 +3,8 @@ module.exports = {
     configure: {
       output: {
         // I need "this" for workerize-loader
-        globalObject: "this"
-      }
-    }
-  }
+        globalObject: "this",
+      },
+    },
+  },
 };

@@ -26,9 +26,10 @@ You can also add an `Open in Git History` button to GitHub, GitLab and Bitbucket
 <details><summary>Or you can use a bookmarklet.</summary>
 
 ```javascript
-javascript: (function() {
+javascript: (function () {
   var url = window.location.href;
-  var regEx = /^(https?\:\/\/)(www\.)?(github|gitlab|bitbucket)\.(com|org)\/(.*)$/i;
+  var regEx =
+    /^(https?\:\/\/)(www\.)?(github|gitlab|bitbucket)\.(com|org)\/(.*)$/i;
   if (regEx.test(url)) {
     url = url.replace(regEx, "$1$3.githistory.xyz/$5");
     window.open(url, "_blank");

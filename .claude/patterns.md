@@ -3,19 +3,21 @@
 ## React Patterns
 
 ### Custom Hook Pattern
+
 ```javascript
 // Hook with state + effect
 function useVersionsLoader(gitProvider) {
   const [state, setState] = useState({
     data: null,
     loading: true,
-    error: null
+    error: null,
   });
 
   useEffect(() => {
-    gitProvider.getVersions()
-      .then(data => setState({ data, loading: false, error: null }))
-      .catch(error => setState(old => ({ ...old, loading: false, error })));
+    gitProvider
+      .getVersions()
+      .then((data) => setState({ data, loading: false, error: null }))
+      .catch((error) => setState((old) => ({ ...old, loading: false, error })));
   }, [dependencies]);
 
   return [state.data, state.loading, state.error];
@@ -23,6 +25,7 @@ function useVersionsLoader(gitProvider) {
 ```
 
 ### Spring Animation Hook
+
 ```javascript
 // From use-spring.js
 export default function useSpring({
@@ -30,7 +33,7 @@ export default function useSpring({
   current = null,
   tension = 0,
   friction = 10,
-  round = x => x
+  round = (x) => x,
 }) {
   const [spring, setSpring] = useState(null);
   const [value, setValue] = useState(target);
@@ -40,6 +43,7 @@ export default function useSpring({
 ```
 
 ### Reducer Pattern for Complex State
+
 ```javascript
 // From scroller.js
 const reducer = (prevState, action) => {
@@ -60,20 +64,22 @@ const reducer = (prevState, action) => {
 ## Provider Pattern
 
 ### Git Provider Interface
+
 ```javascript
 // Every provider exports:
 export default {
-  showLanding,    // () => boolean
-  getPath,        // () => string
-  getVersions,    // (last: number) => Promise<Version[]>
+  showLanding, // () => boolean
+  getPath, // () => string
+  getVersions, // (last: number) => Promise<Version[]>
   // Optional:
-  logIn,          // () => void
-  isLoggedIn,     // () => boolean
-  LogInButton     // React component
+  logIn, // () => void
+  isLoggedIn, // () => boolean
+  LogInButton, // React component
 };
 ```
 
 ### Commit Fetcher Interface
+
 ```javascript
 // Every fetcher exports:
 export default {
@@ -94,6 +100,7 @@ export default {
 ## Airframe Animation Pattern
 
 ### Declarative Animation Definition
+
 ```javascript
 /* @jsx createAnimation */
 
@@ -122,9 +129,10 @@ export default {
 ```
 
 ### Stagger Component
+
 ```javascript
 // Apply animation with offset per item
-<Stagger interval={0.2} filter={line => !line.left && line.middle}>
+<Stagger interval={0.2} filter={(line) => !line.left && line.middle}>
   <chain durations={[0.35, 0.3, 0.35]}>
     <delay />
     <GrowHeight />
@@ -136,6 +144,7 @@ export default {
 ## Diff Processing Pattern
 
 ### Line Diff with State Tracking
+
 ```javascript
 // From differ.js
 // Each line tracks which slides (versions) it appears in
@@ -158,12 +167,13 @@ export default {
 ## VS Code Extension Pattern
 
 ### Webview Communication
+
 ```javascript
 // Extension side (extension.js)
-panel.webview.onDidReceiveMessage(message => {
+panel.webview.onDidReceiveMessage((message) => {
   switch (message.command) {
     case "commits":
-      getCommits(path, last).then(commits => {
+      getCommits(path, last).then((commits) => {
         panel.webview.postMessage(commits);
       });
   }
@@ -172,7 +182,7 @@ panel.webview.onDidReceiveMessage(message => {
 // Webview side (vscode-provider.js)
 const vscode = window.vscode;
 vscode.postMessage({ command: "commits", params: { path, last } });
-window.addEventListener("message", event => {
+window.addEventListener("message", (event) => {
   const commits = event.data;
   // handle commits
 });
@@ -181,6 +191,7 @@ window.addEventListener("message", event => {
 ## Test Patterns
 
 ### Jest Unit Test
+
 ```javascript
 describe("nextIndex", () => {
   const fiveItems = [1, 2, 3, 4, 5];
@@ -196,6 +207,7 @@ describe("nextIndex", () => {
 ```
 
 ### Storybook Story
+
 ```javascript
 import { storiesOf } from "@storybook/react";
 
@@ -207,13 +219,14 @@ storiesOf("ComponentName", module)
 ## API Fetch Pattern
 
 ### With Caching
+
 ```javascript
 const cache = {};
 
 async function getCommits({ path, token, last }) {
   if (!cache[path]) {
     const response = await fetch(url, {
-      headers: token ? { Authorization: `bearer ${token}` } : {}
+      headers: token ? { Authorization: `bearer ${token}` } : {},
     });
     cache[path] = await response.json();
   }
@@ -222,11 +235,12 @@ async function getCommits({ path, token, last }) {
 ```
 
 ### Error Handling
+
 ```javascript
 if (!response.ok) {
   throw {
     status: response.status,
-    body: await response.json()
+    body: await response.json(),
   };
 }
 ```
@@ -239,10 +253,10 @@ const filenameRegex = [
   { lang: "js", regex: /\.js$/i },
   { lang: "typescript", regex: /\.ts$/i },
   // ... more patterns
-  { lang: "js", regex: /.*/ }  // fallback
+  { lang: "js", regex: /.*/ }, // fallback
 ];
 
 export function getLanguage(filename) {
-  return filenameRegex.find(x => x.regex.test(filename)).lang;
+  return filenameRegex.find((x) => x.regex.test(filename)).lang;
 }
 ```

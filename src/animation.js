@@ -70,7 +70,10 @@ function SwitchLines({ filterExit, filterEnter, filterFadeOut }) {
           ease={easing.easeOutCubic}
         />
       </Stagger>
-      <Stagger interval={0} filter={l => !filterEnter(l) && !filterFadeOut(l)}>
+      <Stagger
+        interval={0}
+        filter={(l) => !filterEnter(l) && !filterFadeOut(l)}
+      >
         <tween from={{ opacity: offOpacity }} to={{ opacity: offOpacity }} />
       </Stagger>
     </parallel>
@@ -80,14 +83,14 @@ function SwitchLines({ filterExit, filterEnter, filterFadeOut }) {
 export default (
   <chain durations={[0.5, 0.5]}>
     <SwitchLines
-      filterExit={line => line.left && !line.middle}
-      filterEnter={line => !line.left && line.middle}
-      filterFadeOut={line => false}
+      filterExit={(line) => line.left && !line.middle}
+      filterEnter={(line) => !line.left && line.middle}
+      filterFadeOut={(line) => false}
     />
     <SwitchLines
-      filterExit={line => line.middle && !line.right}
-      filterEnter={line => !line.middle && line.right}
-      filterFadeOut={line => !line.left && line.middle}
+      filterExit={(line) => line.middle && !line.right}
+      filterEnter={(line) => !line.middle && line.right}
+      filterFadeOut={(line) => !line.left && line.middle}
     />
   </chain>
 );

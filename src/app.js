@@ -32,7 +32,7 @@ function InnerApp({ gitProvider }) {
 
   const [versions, loading, error, loadMore] = useVersionsLoader(
     gitProvider,
-    path
+    path,
   );
 
   if (error) {
@@ -56,11 +56,11 @@ function useVersionsLoader(gitProvider) {
     loading: true,
     error: null,
     last: 10,
-    noMore: false
+    noMore: false,
   });
 
   const loadMore = () => {
-    setState(old => {
+    setState((old) => {
       const shouldFetchMore = !old.loading && !old.noMore;
       return shouldFetchMore
         ? { ...old, last: old.last + 10, loading: true }
@@ -71,20 +71,20 @@ function useVersionsLoader(gitProvider) {
   useEffect(() => {
     gitProvider
       .getVersions(state.last)
-      .then(data => {
-        setState(old => ({
+      .then((data) => {
+        setState((old) => ({
           data,
           loading: false,
           error: false,
           last: old.last,
-          noMore: data.length < old.last
+          noMore: data.length < old.last,
         }));
       })
-      .catch(error => {
-        setState(old => ({
+      .catch((error) => {
+        setState((old) => ({
           ...old,
           loading: false,
-          error: error.message || error
+          error: error.message || error,
         }));
       });
   }, [state.last]);

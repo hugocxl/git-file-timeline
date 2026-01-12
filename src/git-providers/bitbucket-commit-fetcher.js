@@ -7,13 +7,13 @@ async function getCommits({ repo, sha, path, last, token }) {
     // fields = "*.*.*.*.*";
     const commitsResponse = await fetch(
       `https://api.bitbucket.org/2.0/repositories/${repo}/filehistory/${sha}/${path}?fields=${fields}`,
-      { headers: token ? { Authorization: `bearer ${token}` } : {} }
+      { headers: token ? { Authorization: `bearer ${token}` } : {} },
     );
 
     if (!commitsResponse.ok) {
       throw {
         status: commitsResponse.status === 403 ? 404 : commitsResponse.status,
-        body: commitsJson
+        body: commitsJson,
       };
     }
 
@@ -26,22 +26,22 @@ async function getCommits({ repo, sha, path, last, token }) {
         login: commit.author.user
           ? commit.author.user.nickname
           : commit.author.raw,
-        avatar: commit.author.user && commit.author.user.links.avatar.href
+        avatar: commit.author.user && commit.author.user.links.avatar.href,
       },
       commitUrl: commit.links.html.href,
-      message: commit.message
+      message: commit.message,
     }));
   }
 
   const commits = cache[path].slice(0, last);
 
   await Promise.all(
-    commits.map(async commit => {
+    commits.map(async (commit) => {
       if (!commit.content) {
         const info = await getContent(repo, commit.sha, path, token);
         commit.content = info.content;
       }
-    })
+    }),
   );
 
   return commits;
@@ -50,7 +50,7 @@ async function getCommits({ repo, sha, path, last, token }) {
 async function getContent(repo, sha, path, token) {
   const contentResponse = await fetch(
     `https://api.bitbucket.org/2.0/repositories/${repo}/src/${sha}/${path}`,
-    { headers: token ? { Authorization: `bearer ${token}` } : {} }
+    { headers: token ? { Authorization: `bearer ${token}` } : {} },
   );
 
   if (contentResponse.status === 404) {
@@ -60,7 +60,7 @@ async function getContent(repo, sha, path, token) {
   if (!contentResponse.ok) {
     throw {
       status: contentResponse.status,
-      body: await contentResponse.json()
+      body: await contentResponse.json(),
     };
   }
 
@@ -70,5 +70,5 @@ async function getContent(repo, sha, path, token) {
 }
 
 export default {
-  getCommits
+  getCommits,
 };

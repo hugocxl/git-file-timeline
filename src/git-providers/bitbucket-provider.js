@@ -11,9 +11,8 @@ function isLoggedIn() {
 }
 
 function getUrlParams() {
-  const [, owner, reponame, , sha, ...paths] = window.location.pathname.split(
-    "/"
-  );
+  const [, owner, reponame, , sha, ...paths] =
+    window.location.pathname.split("/");
 
   if (!sha) {
     return [];
@@ -35,9 +34,9 @@ function showLanding() {
 function logIn() {
   // return new Promise((resolve, reject) => {
   var authenticator = new netlify({
-    site_id: "ccf3a0e2-ac06-4f37-9b17-df1dd41fb1a6"
+    site_id: "ccf3a0e2-ac06-4f37-9b17-df1dd41fb1a6",
   });
-  authenticator.authenticate({ provider: "bitbucket" }, function(err, data) {
+  authenticator.authenticate({ provider: "bitbucket" }, function (err, data) {
     if (err) {
       console.error(err);
       return;
@@ -76,5 +75,5 @@ export default {
   getVersions,
   logIn,
   isLoggedIn,
-  LogInButton
+  LogInButton,
 };

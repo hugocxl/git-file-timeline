@@ -9,7 +9,7 @@ export function Center({ children }) {
         alignItems: "center",
         justifyContent: "center",
         height: "100%",
-        padding: "0 40px"
+        padding: "0 40px",
       }}
     >
       {children}
@@ -58,7 +58,7 @@ export function Error({ error, gitProvider }) {
 
   console.error(error);
   console.error(
-    "Let us know of the error at https://github.com/pomber/git-history/issues"
+    "Let us know of the error at https://github.com/pomber/git-history/issues",
   );
   return (
     <Center>

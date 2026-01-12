@@ -7,5 +7,5 @@ ReactDOM.render(
   <React.unstable_ConcurrentMode>
     <App />
   </React.unstable_ConcurrentMode>,
-  root
+  root,
 );

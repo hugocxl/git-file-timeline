@@ -51,19 +51,20 @@ yarn storybook          # Component development environment
 
 The provider abstraction allows the same React UI to work with different git sources:
 
-| File | Purpose |
-|------|---------|
-| `sources.js` | Detects which source to use (github/gitlab/bitbucket/cli/vscode) |
-| `providers.js` | Factory that returns the appropriate provider |
-| `*-provider.js` | Provider implementation (auth, URL parsing, getVersions) |
-| `*-commit-fetcher.js` | Fetches commit data from respective APIs |
-| `versioner.js` | Entry point (loads web worker) |
-| `versioner.worker.js` | Web worker: fetches commits, tokenizes, diffs |
-| `differ.js` | Line-based diffing using jsdiff library |
-| `tokenizer.js` | Syntax highlighting using Prism.js |
-| `language-detector.js` | Maps file extensions to Prism languages |
+| File                   | Purpose                                                          |
+| ---------------------- | ---------------------------------------------------------------- |
+| `sources.js`           | Detects which source to use (github/gitlab/bitbucket/cli/vscode) |
+| `providers.js`         | Factory that returns the appropriate provider                    |
+| `*-provider.js`        | Provider implementation (auth, URL parsing, getVersions)         |
+| `*-commit-fetcher.js`  | Fetches commit data from respective APIs                         |
+| `versioner.js`         | Entry point (loads web worker)                                   |
+| `versioner.worker.js`  | Web worker: fetches commits, tokenizes, diffs                    |
+| `differ.js`            | Line-based diffing using jsdiff library                          |
+| `tokenizer.js`         | Syntax highlighting using Prism.js                               |
+| `language-detector.js` | Maps file extensions to Prism languages                          |
 
 **Data Flow:**
+
 ```
 Provider.getVersions(last)
   → Fetcher.getCommits(params)  # Get commit metadata + file content
@@ -109,10 +110,10 @@ Key primitives: `<parallel>`, `<chain>`, `<tween>`, `<delay>`, `<Stagger>`
 
 ### Environment Variables
 
-| Variable | Values | Effect |
-|----------|--------|--------|
-| `REACT_APP_GIT_PROVIDER` | `cli`, `vscode` | Selects which provider to bundle |
-| `PUBLIC_URL` | `.` | For VS Code extension (relative paths) |
+| Variable                 | Values          | Effect                                 |
+| ------------------------ | --------------- | -------------------------------------- |
+| `REACT_APP_GIT_PROVIDER` | `cli`, `vscode` | Selects which provider to bundle       |
+| `PUBLIC_URL`             | `.`             | For VS Code extension (relative paths) |
 
 ### CRACO Configuration
 
@@ -121,16 +122,19 @@ Key primitives: `<parallel>`, `<chain>`, `<tween>`, `<delay>`, `<Stagger>`
 ## Provider-Specific Details
 
 ### Web (GitHub/GitLab/Bitbucket)
+
 - URL pattern: `github.githistory.xyz/{owner}/{repo}/blob/{branch}/{path}`
 - Auth via Netlify Identity (`netlify-auth-providers`)
 - API rate limiting handled with login prompts
 
 ### CLI
+
 - Spawns Koa server serving the built React app
 - `/api/commits` endpoint calls local git commands via `execa`
 - Opens browser automatically
 
 ### VS Code Extension
+
 - Embeds pre-built React app in `site/` folder
 - Webview panel with message passing for commit data
 - Uses local git via `execa` (same as CLI)
@@ -153,22 +157,23 @@ Key primitives: `<parallel>`, `<chain>`, `<tween>`, `<delay>`, `<Stagger>`
 
 ## Key Dependencies
 
-| Package | Purpose |
-|---------|---------|
-| `react`, `react-dom` | UI framework (16.8.x) |
-| `prismjs` | Syntax highlighting |
-| `diff` (jsdiff) | Line diffing algorithm |
-| `rebound` | Spring physics for animations |
-| `workerize-loader` | Web workers for heavy computation |
-| `react-swipeable` | Touch/swipe handling |
-| `execa` | Git command execution (CLI/VS Code) |
-| `koa` | HTTP server (CLI) |
+| Package              | Purpose                             |
+| -------------------- | ----------------------------------- |
+| `react`, `react-dom` | UI framework (16.8.x)               |
+| `prismjs`            | Syntax highlighting                 |
+| `diff` (jsdiff)      | Line diffing algorithm              |
+| `rebound`            | Spring physics for animations       |
+| `workerize-loader`   | Web workers for heavy computation   |
+| `react-swipeable`    | Touch/swipe handling                |
+| `execa`              | Git command execution (CLI/VS Code) |
+| `koa`                | HTTP server (CLI)                   |
 
 ## Common Development Tasks
 
 ### Adding a New Language
 
 1. Add regex pattern in `src/git-providers/language-detector.js`:
+
 ```js
 { lang: "newlang", regex: /\.ext$/i },
 ```
@@ -202,11 +207,13 @@ Key primitives: `<parallel>`, `<chain>`, `<tween>`, `<delay>`, `<Stagger>`
 ## File Reference
 
 ### Entry Points
+
 - `src/index.js` - Web app entry
 - `cli/cli.js` - CLI entry
 - `vscode-ext/extension.js` - VS Code extension entry
 
 ### Configuration
+
 - `package.json` - Root package (web app)
 - `cli/package.json` - CLI package
 - `vscode-ext/package.json` - VS Code extension manifest
@@ -214,6 +221,7 @@ Key primitives: `<parallel>`, `<chain>`, `<tween>`, `<delay>`, `<Stagger>`
 - `.storybook/config.js` - Storybook setup
 
 ### Styles
+
 - `src/nightOwl.js` - Default dark theme (syntax highlighting)
 - `src/duotoneLight.js` - Light theme (unused but available)
 - `src/*.css` - Component-specific styles

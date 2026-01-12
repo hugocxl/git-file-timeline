@@ -9,13 +9,16 @@ function mergeResults(results, composite) {
   }
   if (Array.isArray(firstResult)) {
     return firstResult.map((_, i) => {
-      return mergeResults(results.map(result => result[i]), composite);
+      return mergeResults(
+        results.map((result) => result[i]),
+        composite,
+      );
     });
   } else {
     const merged = Object.assign({}, ...results);
 
     if (composite === MULTIPLY) {
-      const opacities = results.map(x => x.opacity).filter(x => x != null);
+      const opacities = results.map((x) => x.opacity).filter((x) => x != null);
       if (opacities.length !== 0) {
         merged.opacity = opacities.reduce((a, b) => a * b);
       }
@@ -27,7 +30,7 @@ function mergeResults(results, composite) {
 const airframe = {
   parallel: ({ children: fns }) => {
     return (t, ...args) => {
-      const styles = fns.map(fn => fn(t, ...args));
+      const styles = fns.map((fn) => fn(t, ...args));
       const result = mergeResults(styles, MULTIPLY);
       return result;
     };
@@ -56,29 +59,31 @@ const airframe = {
     };
   },
   delay: () => () => ({}),
-  tween: ({ from, to, ease = easing.linear }) => (t, targets) => {
-    const style = {};
-    Object.keys(from).forEach(key => {
-      const value = from[key] + (to[key] - from[key]) * ease(t);
-      if (key === "x") {
-        style["transform"] = `translateX(${value}px)`;
-      } else {
-        style[key] = value;
-      }
-    });
-    return style;
-  }
+  tween:
+    ({ from, to, ease = easing.linear }) =>
+    (t, targets) => {
+      const style = {};
+      Object.keys(from).forEach((key) => {
+        const value = from[key] + (to[key] - from[key]) * ease(t);
+        if (key === "x") {
+          style["transform"] = `translateX(${value}px)`;
+        } else {
+          style[key] = value;
+        }
+      });
+      return style;
+    },
 };
 
 /* @jsx createAnimation */
-export const Stagger = props => (t, targets) => {
-  const filter = target => !props.filter || props.filter(target);
+export const Stagger = (props) => (t, targets) => {
+  const filter = (target) => !props.filter || props.filter(target);
   const interval =
     targets.filter(filter).length < 2
       ? 0
       : props.interval / (targets.filter(filter).length - 1);
   let i = 0;
-  return targets.map(target => {
+  return targets.map((target) => {
     // console.log(target, props.filter(target));
     if (!filter(target)) {
       return {};

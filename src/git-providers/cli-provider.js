@@ -17,5 +17,5 @@ async function getVersions(last) {
 export default {
   showLanding,
   getVersions,
-  getPath
+  getPath,
 };

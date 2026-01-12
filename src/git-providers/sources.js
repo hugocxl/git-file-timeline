@@ -3,7 +3,7 @@ export const SOURCE = {
   GITLAB: "gitlab",
   BITBUCKET: "bitbucket",
   CLI: "cli",
-  VSCODE: "vscode"
+  VSCODE: "vscode",
 };
 
 export function getSource() {
