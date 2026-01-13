@@ -13,8 +13,17 @@
   "engines": {
     "vscode": "^1.95.0"
   },
-  "categories": ["Other"],
-  "keywords": ["git", "history", "log", "file", "commit", "diff"],
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "history",
+    "log",
+    "file",
+    "commit",
+    "diff"
+  ],
   "main": "./dist/extension.js",
   "activationEvents": [],
   "contributes": {
