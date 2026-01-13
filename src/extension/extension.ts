@@ -1,7 +1,21 @@
 import * as path from "node:path";
 import * as vscode from "vscode";
 import { getCommits } from "./git";
-import type { ToExtensionMessage, ToWebviewMessage } from "./types";
+import type {
+  DiffSettings,
+  ToExtensionMessage,
+  ToWebviewMessage,
+} from "./types";
+
+const SETTINGS_KEY = "diffSettings";
+
+const DEFAULT_SETTINGS: DiffSettings = {
+  layout: "split",
+  theme: "github-dark",
+  lineNumbers: true,
+  background: true,
+  expandUnchanged: true,
+};
 
 /** Get the path to the worker-portable.js file from @pierre/diffs */
 function getWorkerPath(context: vscode.ExtensionContext): vscode.Uri {
@@ -64,12 +78,24 @@ export function activate(context: vscode.ExtensionContext) {
       panel.webview.onDidReceiveMessage(
         async (message: ToExtensionMessage) => {
           switch (message.type) {
-            case "ready":
+            case "ready": {
+              // Send persisted settings to webview
+              const settings = context.globalState.get<DiffSettings>(
+                SETTINGS_KEY,
+                DEFAULT_SETTINGS
+              );
+              sendMessage(panel.webview, { type: "settings", settings });
+              // Send init data
               sendMessage(panel.webview, {
                 type: "init",
                 filePath,
                 fileName,
               });
+              break;
+            }
+
+            case "saveSettings":
+              context.globalState.update(SETTINGS_KEY, message.settings);
               break;
 
             case "loadMore":

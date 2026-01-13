@@ -8,14 +8,7 @@ import {
   useWorkerPool,
   WorkerPoolContextProvider,
 } from "@pierre/diffs/react";
-import {
-  Check,
-  Columns2,
-  Hash,
-  Paintbrush,
-  Palette,
-  UnfoldVertical,
-} from "lucide-react";
+import { Check, Columns2, Palette, UnfoldVertical } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
@@ -34,7 +27,6 @@ import type {
 // Constants
 // =============================================================================
 const WORKER_POOL_SIZE = 4;
-const SETTINGS_KEY = "diffSettings";
 
 const DEFAULT_SETTINGS: DiffSettings = {
   layout: "split",
@@ -170,39 +162,30 @@ function formatDate(dateStr: string): string {
 
 /**
  * Custom hook for persisting diff settings across sessions
- * Uses VS Code webview state API for persistence
+ * Settings are persisted via the extension's globalState
  */
 function useSettings(): [
   DiffSettings,
   (updates: Partial<DiffSettings>) => void,
+  (settings: DiffSettings) => void,
 ] {
-  const [settings, setSettingsState] = useState<DiffSettings>(() => {
-    // Try to restore settings from VS Code state
-    if (vscode) {
-      const state = vscode.getState() as {
-        [SETTINGS_KEY]?: DiffSettings;
-      } | null;
-      if (state?.[SETTINGS_KEY]) {
-        return { ...DEFAULT_SETTINGS, ...state[SETTINGS_KEY] };
-      }
-    }
-    return DEFAULT_SETTINGS;
-  });
+  const [settings, setSettingsState] = useState<DiffSettings>(DEFAULT_SETTINGS);
 
   const updateSettings = useCallback((updates: Partial<DiffSettings>) => {
     setSettingsState((prev) => {
       const next = { ...prev, ...updates };
-      // Persist to VS Code state
-      if (vscode) {
-        const currentState =
-          (vscode.getState() as Record<string, unknown>) || {};
-        vscode.setState({ ...currentState, [SETTINGS_KEY]: next });
-      }
+      // Send to extension for persistence
+      vscode?.postMessage({ type: "saveSettings", settings: next });
       return next;
     });
   }, []);
 
-  return [settings, updateSettings];
+  // Set full settings (used when receiving from extension)
+  const setSettings = useCallback((newSettings: DiffSettings) => {
+    setSettingsState({ ...DEFAULT_SETTINGS, ...newSettings });
+  }, []);
+
+  return [settings, updateSettings, setSettings];
 }
 
 // =============================================================================
@@ -257,34 +240,6 @@ function DiffSettingsFooter({ settings, onUpdate }: DiffSettingsBarProps) {
             ))}
           </optgroup>
         </select>
-      </label>
-
-      {/* Line numbers checkbox */}
-      <label className="settings-field settings-checkbox">
-        <Hash size={14} />
-        <span className="settings-label">Line numbers</span>
-        <input
-          type="checkbox"
-          checked={settings.lineNumbers}
-          onChange={(e) => onUpdate({ lineNumbers: e.target.checked })}
-        />
-        <span className="checkmark">
-          {settings.lineNumbers && <Check size={12} />}
-        </span>
-      </label>
-
-      {/* Background checkbox */}
-      <label className="settings-field settings-checkbox">
-        <Paintbrush size={14} />
-        <span className="settings-label">Background</span>
-        <input
-          type="checkbox"
-          checked={settings.background}
-          onChange={(e) => onUpdate({ background: e.target.checked })}
-        />
-        <span className="checkmark">
-          {settings.background && <Check size={12} />}
-        </span>
       </label>
 
       {/* Expand unchanged checkbox */}
@@ -386,14 +341,35 @@ function DiffViewer({ oldFile, newFile, settings }: DiffViewerProps) {
     }
   }, [pool, settings.theme]);
 
-  // Build data attributes for line numbers and background
-  const dataAttrs: Record<string, string> = {};
-  if (!settings.lineNumbers) {
-    dataAttrs["data-disable-line-numbers"] = "";
-  }
-  if (!settings.background) {
-    dataAttrs["data-disable-background"] = "";
-  }
+  // Build custom CSS based on settings
+  const customCSS = `
+    [data-diffs-header], [data-diffs], [data-error-wrapper] {
+      --diffs-bg: transparent;
+    }
+    [data-line-type="context-expanded"] {
+      --diffs-line-bg: transparent;
+    }
+    ${
+      !settings.lineNumbers
+        ? `
+    [data-line-number-content] {
+      display: none !important;
+    }
+    `
+        : ""
+    }
+    ${
+      !settings.background
+        ? `
+    [data-line-type="added"], [data-line-type="deleted"], [data-line-type="modified"] {
+      --diffs-line-bg: transparent !important;
+      --diffs-bg-addition: transparent !important;
+      --diffs-bg-deletion: transparent !important;
+    }
+    `
+        : ""
+    }
+  `;
 
   return (
     <MultiFileDiff
@@ -405,25 +381,8 @@ function DiffViewer({ oldFile, newFile, settings }: DiffViewerProps) {
         expandUnchanged: settings.expandUnchanged,
         diffIndicators: "bars",
         theme: settings.theme,
-        unsafeCSS: `
-          [data-diffs-header], [data-diffs], [data-error-wrapper] {
-            --diffs-bg: transparent;
-          }
-          [data-line-type="context-expanded"] {
-            --diffs-line-bg: transparent;
-          }
-          ${
-            !settings.background
-              ? `
-          [data-line-type="added"], [data-line-type="deleted"], [data-line-type="modified"] {
-            --diffs-line-bg: transparent !important;
-          }
-          `
-              : ""
-          }
-        `,
+        unsafeCSS: customCSS,
       }}
-      {...dataAttrs}
     />
   );
 }
@@ -435,7 +394,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  const [settings, updateSettings] = useSettings();
+  const [settings, updateSettings, setSettings] = useSettings();
 
   // Worker pool state
   const [workerFactory, setWorkerFactory] = useState<(() => Worker) | null>(
@@ -476,6 +435,10 @@ function App() {
       const message = event.data;
 
       switch (message.type) {
+        case "settings":
+          setSettings(message.settings);
+          break;
+
         case "init":
           setFileName(message.fileName);
           // Request initial commits
@@ -501,7 +464,7 @@ function App() {
     vscode?.postMessage({ type: "ready" });
 
     return () => window.removeEventListener("message", handler);
-  }, []);
+  }, [setSettings]);
 
   // Load more commits when reaching end of carousel
   const loadMore = useCallback(() => {

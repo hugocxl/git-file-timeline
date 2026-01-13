@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-  <strong>Visual git file history with syntax-highlighted diffs</strong>
+  <strong>Navigate your file's commit timeline with syntax-highlighted diffs</strong>
 </p>
 
 <p align="center">
@@ -48,7 +48,7 @@ Right-click anywhere in an open file and select **"Git File Timeline"**.
 ## Keyboard Shortcuts
 
 | Key | Action |
-|-----|--------|
+| ----- | -------- |
 | `Left Arrow` | View previous commit |
 | `Right Arrow` | View next commit |
 
@@ -89,4 +89,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 ---
 
-**Enjoy exploring your git history!**
+**Enjoy exploring your git timeline!**
