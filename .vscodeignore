@@ -8,9 +8,11 @@ esbuild.config.mjs
 biome.json
 
 # Development files
-node_modules/
 .git/
 .gitignore
+.vscode/
+.claude/
+pnpm-lock.yaml
 
 # Build artifacts not needed
 *.map
@@ -18,3 +20,11 @@ node_modules/
 # Misc
 .DS_Store
 *.log
+
+# Documentation (README is included by default)
+INSTALL.md
+CLAUDE.md
+
+# Exclude unnecessary node_modules (keep @pierre/diffs for worker)
+node_modules/.pnpm/*
+!node_modules/@pierre/

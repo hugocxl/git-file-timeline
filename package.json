@@ -2,10 +2,22 @@
   "name": "git-file-history",
   "displayName": "Git File History",
   "description": "Visual git file history with syntax-highlighted diffs",
-  "version": "2.0.0",
-  "publisher": "pomber",
+  "version": "1.0.0",
+  "publisher": "hugocxl",
+  "author": {
+    "name": "Hugo Corta",
+    "email": "corta.hugo@gmail.com"
+  },
   "license": "MIT",
-  "repository": "pomber/git-history",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hugocxl/git-history"
+  },
+  "homepage": "https://github.com/hugocxl/git-history#readme",
+  "bugs": {
+    "url": "https://github.com/hugocxl/git-history/issues"
+  },
+  "icon": "assets/icon.png",
   "galleryBanner": {
     "color": "#011627",
     "theme": "dark"
@@ -14,6 +26,8 @@
     "vscode": "^1.95.0"
   },
   "categories": [
+    "SCM Providers",
+    "Visualization",
     "Other"
   ],
   "keywords": [
@@ -55,23 +69,24 @@
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit",
     "check": "biome check .",
     "format": "biome format --write .",
-    "package": "pnpm build && vsce package --no-dependencies"
+    "package": "pnpm build && vsce package --no-dependencies",
+    "publish": "vsce publish"
   },
   "dependencies": {
-    "@pierre/diffs": "^1.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@pierre/diffs": "^1.0.4",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22.10.0",
-    "@types/react": "^19.0.2",
-    "@types/react-dom": "^19.0.2",
-    "@types/vscode": "^1.95.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "@vscode/vsce": "^3.2.0",
-    "concurrently": "^9.1.0",
-    "typescript": "^5.7.2",
-    "vite": "^6.0.7"
+    "@biomejs/biome": "^2.3.11",
+    "@types/node": "^25.0.8",
+    "@types/react": "^19.2.8",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "^1.108.1",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@vscode/vsce": "^3.7.1",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
   }
 }

@@ -317,11 +317,15 @@ function App() {
             lineDiffType: "word-alt",
             expandUnchanged: true,
             diffIndicators: "bars",
-            theme: "github-dark",
+            theme: "pierre-dark",
             unsafeCSS: `
-          [data-line-type="context-expanded"] {
-            --diffs-line-bg: transparent;
-          }
+              [data-diffs-header], [data-diffs], [data-error-wrapper] {
+                --diffs-bg: transparent;
+              }
+
+              [data-line-type="context-expanded"] {
+                --diffs-line-bg: transparent;
+              }
           `,
           }}
         />
@@ -338,7 +342,7 @@ function App() {
           poolSize: WORKER_POOL_SIZE,
         }}
         highlighterOptions={{
-          theme: "dracula",
+          theme: "pierre-dark",
         }}
       >
         {content}
