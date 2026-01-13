@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <img src="https://raw.githubusercontent.com/hugocxl/git-file-timeline/master/icon.png" alt="icon" width="100">
+  <img src="https://github.com/hugocxl/git-file-timeline/blob/master/assets/icon.png?raw=true" alt="icon" width="100">
   <br>
   Git File Timeline
   <br>
